@@ -50,46 +50,55 @@ function drawAxis(car_data) {
   var radius = d3.scaleSqrt();
   var color = d3.scaleOrdinal();
 
+  //setting up the ranges
   xScale.range([0, width]).domain(years);
   yScale.range([0, height]).domain(cylinders);
   color.range(d3.schemeCategory20).domain(originTypes);
   radius.range([0, 15]).domain([0, maxMPG]);
 
+  //setting up the axises
   var yAxis = d3.axisLeft().scale(yScale);
   var xAxis = d3.axisBottom()
     .tickFormat(function(d) { return d; })
     .scale(xScale);
 
+  //adding svg
   var svg = d3.select('body').append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom);
 
+  //adding g
   var g = svg.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top +  ')');
 
+  //adding y axix
   g.append('g')
     .attr('class', 'y axis')
     .call(yAxis);
 
+  //adding x axis
   g.append('g')
     .attr('class', 'x axis')
       .attr('transform', 'translate(0, ' + height + ')')
       .call(xAxis);
 
+  // adding x label
   svg.append("text")
-    .attr("class", "x label")
-    .attr("text-anchor", "end")
-    .attr("x", width)
-    .attr("y", height)
-    .text("Car year");
+     .attr("transform",
+          "translate(" + (width/1.5) + " ," +
+                         (height + margin.top + 30) + ")")
+     .style("text-anchor", "middle")
+     .text("Car Year");
 
+  //adding y label
   svg.append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .attr("y", 6)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("cylinders");
+      .attr("class", "y label")
+      .attr("text-anchor", "end")
+      .attr("y", 6)
+      .attr("dy", "5em")
+      .attr("transform", "rotate(-90)")
+      .text("cylinders");
+
   updateChart()
 }
 
