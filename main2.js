@@ -18,13 +18,14 @@ function drawAxis(car_data) {
   var nested = d3.nest()
     .key(function(d) { return d.name; })
     .key(function(d) { return d.origin; })
+    // .key(function(d) { return d.cylinders})
     .entries(car_data);
 
-  console.log("nested", nested)
+  // console.log("nested", nested)
 
   var map = d3.map(nested, function(d) { return d.key; });
 
-  console.log("map", map)
+  // console.log("map", map)
 
   var maxMPG = d3.max(car_data, function(d) { return d.mpg; });
 
@@ -36,27 +37,27 @@ function drawAxis(car_data) {
 
     return acc;
   }, []);
-  console.log(years)
+  // console.log(years)
 
   //horsepower will be the first y-axis
-  var cylinders = car_data.reduce(function(acc, cur) {
+  // var cylinders = car_data.reduce(function(acc, cur) {
+  //   if (acc.indexOf(cur.cylinders) === -1) {
+  //     acc.push(cur.cylinders);
+  //   }
+  //
+  //   return acc;
+  // }, []);
+  // console.log(cylinders)
+
+  // cylinders of the cars will encode color
+  var cylindersTypes = car_data.reduce(function(acc, cur) {
     if (acc.indexOf(cur.cylinders) === -1) {
       acc.push(cur.cylinders);
     }
 
     return acc;
   }, []);
-  console.log(cylinders)
-
-  // origins of the cars will encode color first
-  var originTypes = car_data.reduce(function(acc, cur) {
-    if (acc.indexOf(cur.origin) === -1) {
-      acc.push(cur.origin);
-    }
-
-    return acc;
-  }, []);
-  console.log(originTypes)
+  console.log(cylindersTypes)
 
   //setting up the scales
   var xScale = d3.scalePoint().padding(0.3);
@@ -69,7 +70,7 @@ function drawAxis(car_data) {
   yScale.range([0, height]).round(true);
 
   // yScale.range([0, height]).domain(cylinders);
-  color.range(d3.schemeCategory20).domain(originTypes);
+  color.range(d3.schemeCategory20).domain(cylindersTypes);
   radius.range([0, 15]).domain([0, maxMPG]);
 
   //setting up the axises
@@ -188,7 +189,7 @@ function updateChart(car, g, yAxis, yScale, xScale, radius, color, h3) {
     .attr('cx', function(d) { return xScale(d.year); })
     .transition(t)
     .attr('r', function(d) { return radius(d.mpg); })
-    .attr('fill', function(d) { return color(d.origin); });
+    .attr('fill', function(d) { return color(d.cylinders); });
 
   // 3. create new circles in each svg .site group
   circles
@@ -197,7 +198,7 @@ function updateChart(car, g, yAxis, yScale, xScale, radius, color, h3) {
     .attr('cx', function(d) { return xScale(d.year); })
     .transition(t)
     .attr('r', function(d) { return radius(d.mpg); })
-    .attr('fill', function(d) { return color(d.origin); });
+    .attr('fill', function(d) { return color(d.cylinders); });
 
   // update the title to show what site we are looking at
   h3.text(car.key);
@@ -206,7 +207,7 @@ function updateChart(car, g, yAxis, yScale, xScale, radius, color, h3) {
 
 function cycle(nested, map, g, yAxis, yScale, xScale, radius, color, h3) {
   nested.forEach(function(car, i) {
-    console.log("car", car)
+    // console.log("car", car)
     d3.timeout(function(elapsed) {
       updateChart(map.get(car.key), g, yAxis, yScale, xScale, radius, color, h3);
 
