@@ -44,6 +44,3 @@ Do your best, try not to get frustrated and give up. If you are unable to get so
 To debug your code use Chrome's Dev Tools: try using `console.log`'s, breakpoints, and commenting things out.
 
 It's a good idea to not wait until the day before this is due and attempt to finish it in one go.
-
-# My solution
-The x-axis is year, the y-axis is origin. I was able to cycle through the different names of the cars, and for each car name I plotted when they were built and from where. The size of the circle represents the mpg, and the color encodes the cylinders.

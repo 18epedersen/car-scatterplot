@@ -52,7 +52,7 @@ d3.csv("data/data.csv", function(error, data) {
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
       .append("text")
-      .attr("class", "label")
+      .attr("class", "x-label")
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
@@ -69,6 +69,7 @@ d3.csv("data/data.csv", function(error, data) {
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text("Horsepower");
+
 
   // drawing the scatterplot
   svg.selectAll(".dot")
@@ -116,9 +117,12 @@ d3.csv("data/data.csv", function(error, data) {
       .style("text-anchor", "end")
       .text(function(d) { return d;})
 
+  // the second y value is accelerations
+  // also updating the yscale
   yValue = function(d) { return d.acceleration;}
   yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
 
+  // selecting all the dots on the webpage and having them transition to new values
   svg.selectAll(".dot")
       .data(data)
       .on("mouseover", function(d) {
@@ -144,26 +148,25 @@ d3.csv("data/data.csv", function(error, data) {
       .attr("cy", yMap)
       .style("fill", function(d) { return color(cValue(d));});
 
+  // updating the y axis
   svg.select(".y.axis")
       .transition()
       .delay(3000)
       .duration(5000)
       .call(yAxis)
 
-  // d3.select("g.y-label")
-  //     .select("text")
-  //     .transition()
-  //     .delay(3000)
-  //     .duration(5000)
-  //     .attr("transform", "rotate(-90)")
-  //     .attr("y", 6)
-  //     .attr("dy", ".71em")
-  //     .style("text-anchor", "end")
-  //     .text("Acceleration");
+  // updating the y label
+  svg.select(".y-label")
+      .transition()
+      .delay(3000)
+      .duration(5000)
+      .text("Acceleration");
 
+  // second value for x is the mpg
   xValue = function(d) { return d.mpg;}
   xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
 
+  // selecting all the dots and updating them to new x values
   svg.selectAll(".dot")
       .data(data)
       .on("mouseover", function(d) {
@@ -189,11 +192,17 @@ d3.csv("data/data.csv", function(error, data) {
       .attr("cy", yMap)
       .style("fill", function(d) { return color(cValue(d));});
 
+  // updating the x axis
   svg.select(".x.axis")
       .transition()
       .delay(6000)
       .duration(5000)
       .call(xAxis)
 
-
+  // updating the x label
+  svg.select(".x-label")
+      .transition()
+      .delay(6000)
+      .duration(5000)
+      .text("Mpg");
 });
