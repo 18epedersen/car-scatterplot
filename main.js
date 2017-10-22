@@ -12,9 +12,9 @@ var xValue = function(d) { return d.weight;},
 
 // setting up y values
 // y will initially be horsepower
-var yValue = function(d) { return d.horsepower;}, // data -> value
-    yScale = d3.scale.linear().range([height, 0]), // value -> display
-    yMap = function(d) { return yScale(yValue(d));}, // data -> display
+var yValue = function(d) { return d.horsepower;},
+    yScale = d3.scale.linear().range([height, 0]),
+    yMap = function(d) { return yScale(yValue(d));},
     yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 // setting up fill color to be origin of the cars
@@ -38,6 +38,8 @@ d3.csv("data/data.csv", function(error, data) {
   data.forEach(function(d) {
     d.weight = +d.weight;
     d.horsepower = +d.horsepower;
+    d.acceleration = +d.acceleration;
+    d.mpg = +d.mpg
   });
 
   // The domain of x and y, and also adding a bit of buffer
@@ -61,7 +63,7 @@ d3.csv("data/data.csv", function(error, data) {
       .attr("class", "y axis")
       .call(yAxis)
       .append("text")
-      .attr("class", "label")
+      .attr("class", "y-label")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
@@ -113,6 +115,85 @@ d3.csv("data/data.csv", function(error, data) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d;})
+
+  yValue = function(d) { return d.acceleration;}
+  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+
+  svg.selectAll(".dot")
+      .data(data)
+      .on("mouseover", function(d) {
+          tooltip.transition()
+               .duration(200)
+               .style("opacity", .9);
+          tooltip.html(d.origin + "<br/> (" + xValue(d)
+	        + ", " + yValue(d) + ")")
+               .style("left", (d3.event.pageX + 5) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+          tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+      })
+      .transition()
+      .delay(3000)
+      .duration(5000)
+      .attr("class", "dot")
+      .attr("r", 3)
+      .attr("cx", xMap)
+      .attr("cy", yMap)
+      .style("fill", function(d) { return color(cValue(d));});
+
+  svg.select(".y.axis")
+      .transition()
+      .delay(3000)
+      .duration(5000)
+      .call(yAxis)
+
+  // d3.select("g.y-label")
+  //     .select("text")
+  //     .transition()
+  //     .delay(3000)
+  //     .duration(5000)
+  //     .attr("transform", "rotate(-90)")
+  //     .attr("y", 6)
+  //     .attr("dy", ".71em")
+  //     .style("text-anchor", "end")
+  //     .text("Acceleration");
+
+  xValue = function(d) { return d.mpg;}
+  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+
+  svg.selectAll(".dot")
+      .data(data)
+      .on("mouseover", function(d) {
+          tooltip.transition()
+               .duration(200)
+               .style("opacity", .9);
+          tooltip.html(d.origin + "<br/> (" + xValue(d)
+	        + ", " + yValue(d) + ")")
+               .style("left", (d3.event.pageX + 5) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+          tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+      })
+      .transition()
+      .delay(6000)
+      .duration(5000)
+      .attr("class", "dot")
+      .attr("r", 3)
+      .attr("cx", xMap)
+      .attr("cy", yMap)
+      .style("fill", function(d) { return color(cValue(d));});
+
+  svg.select(".x.axis")
+      .transition()
+      .delay(6000)
+      .duration(5000)
+      .call(xAxis)
 
 
 });
