@@ -1,3 +1,6 @@
+# Instructions
+Below are the instructions for the Info-2 190 (Fall 2017) midterm
+
 # Midterm
 
 Your mission: create a scatterplot using the automobile data provided in this repo (see `data/data.csv`).
